@@ -1,0 +1,9 @@
+mode: FOLLOWER
+
+connection:
+  host: localhost
+  port: 9003
+
+leaderConnection:
+  host: localhost
+  port: 9000
