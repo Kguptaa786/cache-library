@@ -1,7 +1,0 @@
-mode: LEADER
-
-connection:
-  host: localhost
-  port: 9000
-
-logFilePath: "logs/commitLog.txt"

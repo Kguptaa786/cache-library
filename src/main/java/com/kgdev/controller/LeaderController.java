@@ -14,31 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-@RestController("/cache")
-public class CacheController {
+@RestController("/leader/cache")
+public class LeaderController {
 
     @Autowired
-    @Qualifier("LeaderInMemoryCacheService")
+    @Qualifier("leaderInMemoryCacheService")
     private CacheService leaderCacheService;
 
-    @Autowired
-    @Qualifier
-    private CacheService followerCacheService;
-
-
-    @GetMapping(value = "/get")
-    public ResponseEntity getCacheKey(@RequestParam CacheKey key) throws BadRequestException {
-
-        CacheValue cacheValue = followerCacheService.get(key);
-        return ResponseEntity.ok(cacheValue);
+    @GetMapping("test")
+    public ResponseEntity testApi(){
+        return ResponseEntity.ok("Hello");
     }
 
-    @PostMapping(value = "/put")
+    @PostMapping("put")
     public ResponseEntity putCacheKeyAndValue(@RequestParam CacheKey key, @RequestParam CacheValue value) throws BadRequestException, IOException {
+        System.out.println("key : "+key + ", value : "+value);
         return ResponseEntity.ok(leaderCacheService.put(key, value));
     }
 
-    @PostMapping(value = "delete")
+    @PostMapping("delete")
     public ResponseEntity deleteCacheKeyAndValue(@RequestParam CacheKey key) throws BadRequestException, IOException {
         return ResponseEntity.ok(leaderCacheService.delete(key));
     }

@@ -5,6 +5,7 @@ import com.kgdev.object.CacheKey;
 import com.kgdev.object.CacheValue;
 import com.kgdev.object.CommitLog;
 import com.kgdev.utils.CommitLogUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -12,12 +13,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-@Service("FollowerInMemoryCacheService")
+@Service("followerInMemoryCacheService")
 public class FollowerInMemoryCacheService extends InMemoryCacheService implements Runnable{
     private final Socket leaderSocket;
     private final BufferedReader commitLogReader;
 
-    public FollowerInMemoryCacheService(String host, int port) throws IOException {
+    public FollowerInMemoryCacheService(@Value("${leaderConnection.host}") String host,@Value("${leaderConnection.port}") int port) throws IOException {
         super();
         this.leaderSocket = new Socket(host, port);
         this.commitLogReader = new BufferedReader(new InputStreamReader(leaderSocket.getInputStream()));

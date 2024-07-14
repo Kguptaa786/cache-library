@@ -1,0 +1,8 @@
+spring:
+  profiles: follower3
+server:
+  port: 8083
+
+leaderConnection:
+  host: "localhost"
+  port: 9090

@@ -3,6 +3,7 @@ package com.kgdev.service;
 import com.kgdev.exception.BadRequestException;
 import com.kgdev.object.*;
 import com.kgdev.utils.CommitLogUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
@@ -11,14 +12,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-@Service("LeaderInMemoryCacheService")
-
+@Service("leaderInMemoryCacheService")
 public class LeaderInMemoryCacheService extends InMemoryCacheService{
 
     private final ServerSocket serverSocket;
     private final List<Socket> followerSockets = new ArrayList<>();
     private final FileWriter commitLogWriter;
-    public LeaderInMemoryCacheService(int port, String filePath) throws IOException {
+    public LeaderInMemoryCacheService(@Value("${connection.port}") int port, @Value("${logFilePath}") String filePath) throws IOException {
         super();
         this.serverSocket = new ServerSocket(port);
         this.commitLogWriter = new FileWriter(filePath, true);

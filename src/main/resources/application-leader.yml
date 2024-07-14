@@ -1,0 +1,8 @@
+spring:
+  profiles: leader
+server:
+  port: 8080
+
+connection:
+  port: 9090
+logFilePath: "leader-commit-log.txt"
