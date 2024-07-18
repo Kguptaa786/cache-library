@@ -20,7 +20,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.kgdev.Main</mainClass>
+                  <mainClass>com.kgdev.Application</mainClass>
                 </transformer>
               </transformers>
             </configuration>

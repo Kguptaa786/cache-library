@@ -1,2 +1,8 @@
+server:
+  port: 8081
+
 leaderConnection:
-  host: localhost
+  host: "localhost"
+  port: 9090
+
+logFilePath: "logs/commitLog.txt"

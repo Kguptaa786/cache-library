@@ -18,18 +18,16 @@ public class LeaderInMemoryCacheService extends InMemoryCacheService{
     private final ServerSocket serverSocket;
     private final List<Socket> followerSockets = new ArrayList<>();
     private final FileWriter commitLogWriter;
-    public LeaderInMemoryCacheService(@Value("${connection.port}") int port, @Value("${logFilePath}") String filePath) throws IOException {
+    public LeaderInMemoryCacheService(@Value("${leaderConnection.port}") int port, @Value("${logFilePath}") String filePath) throws IOException {
         super();
         this.serverSocket = new ServerSocket(port);
         this.commitLogWriter = new FileWriter(filePath, true);
-        new Thread(this::acceptFollowerConnections).start();
     }
 
-    private void acceptFollowerConnections() {
+    public void acceptFollowerConnections() {
         while (true) {
             try {
                 Socket followerSocket = serverSocket.accept();
-                System.out.println(followerSocket);
                 followerSockets.add(followerSocket);
             } catch (IOException e) {
                 e.printStackTrace();

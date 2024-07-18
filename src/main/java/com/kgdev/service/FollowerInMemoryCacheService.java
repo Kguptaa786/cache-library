@@ -15,13 +15,17 @@ import java.net.Socket;
 
 @Service("followerInMemoryCacheService")
 public class FollowerInMemoryCacheService extends InMemoryCacheService implements Runnable{
-    private final Socket leaderSocket;
-    private final BufferedReader commitLogReader;
+    private  Socket leaderSocket;
+    private  BufferedReader commitLogReader;
 
-    public FollowerInMemoryCacheService(@Value("${leaderConnection.host}") String host,@Value("${leaderConnection.port}") int port) throws IOException {
+    public FollowerInMemoryCacheService(@Value("${leaderConnection.host}") String host,@Value("${leaderConnection.port}") int port){
         super();
-        this.leaderSocket = new Socket(host, port);
-        this.commitLogReader = new BufferedReader(new InputStreamReader(leaderSocket.getInputStream()));
+        try {
+            this.leaderSocket = new Socket(host, port);
+            this.commitLogReader = new BufferedReader(new InputStreamReader(leaderSocket.getInputStream()));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
