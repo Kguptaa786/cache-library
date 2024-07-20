@@ -1,66 +1,59 @@
 package com.kgdev.service;
 
-import com.kgdev.exception.BadRequestException;
 import com.kgdev.object.*;
 import com.kgdev.utils.CommitLogUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service("leaderInMemoryCacheService")
+@Profile("leader")
 public class LeaderInMemoryCacheService extends InMemoryCacheService{
 
-    private final ServerSocket serverSocket;
-    private final List<Socket> followerSockets = new ArrayList<>();
     private final FileWriter commitLogWriter;
-    public LeaderInMemoryCacheService(@Value("${leaderConnection.port}") int port, @Value("${logFilePath}") String filePath) throws IOException {
+    private final Map<CacheKey, CacheValue> cacheMap;
+    public LeaderInMemoryCacheService(@Value("${logFilePath}") String filePath) throws IOException {
         super();
-        this.serverSocket = new ServerSocket(port);
         this.commitLogWriter = new FileWriter(filePath, true);
+        this.cacheMap = new HashMap<>();
     }
 
-    public void acceptFollowerConnections() {
-        while (true) {
-            try {
-                Socket followerSocket = serverSocket.accept();
-                followerSockets.add(followerSocket);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     @Override
-    public boolean put(CacheKey key, CacheValue value) throws IOException, BadRequestException {
+    public CacheValue get(CacheKey key) {
+        return cacheMap.getOrDefault(key, null);
+    }
+
+    @Override
+    public boolean put(CacheKey key, CacheValue value) {
         try {
             CommitLog commitLog = CommitLog.builder().key(key).value(value).method(MethodEnum.WRITE).build();
             commitLogWriter.append(CommitLogUtil.createLogEntry(commitLog));
             commitLogWriter.flush();
-            for (Socket followerSocket : followerSockets) {
-                followerSocket.getOutputStream().write(CommitLogUtil.createLogEntry(commitLog).getBytes());
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return super.put(key, value);
+        cacheMap.put(key, value);
+        return true;
     }
 
     @Override
-    public boolean delete(CacheKey key) throws IOException, BadRequestException {
+    public boolean delete(CacheKey key) {
+        if(!cacheMap.containsKey(key)){
+            return false;
+        }
         try {
             CommitLog commitLog = CommitLog.builder().key(key).method(MethodEnum.DELETE).build();
             commitLogWriter.append(CommitLogUtil.createLogEntry(commitLog));
             commitLogWriter.flush();
-            for (Socket followerSocket : followerSockets) {
-                followerSocket.getOutputStream().write(CommitLogUtil.createLogEntry(commitLog).getBytes());
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return super.delete(key);
+        cacheMap.remove(key);
+        return true;
     }
 }

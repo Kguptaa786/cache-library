@@ -1,11 +1,10 @@
 package com.kgdev.object;
 
-public class GenericCacheValue implements CacheValue{
-    private final Object value;
-    public GenericCacheValue(Object value) {
+public class StringCacheValue implements CacheValue{
+    private final String value;
+    public StringCacheValue(String value) {
         this.value = value;
     }
-
     @Override
     public Object getCacheValue() {
         return this.value;

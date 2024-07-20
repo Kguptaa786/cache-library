@@ -1,0 +1,6 @@
+key1;;value1;;WRITE
+key2;;value2;;WRITE
+name;;krishna;;WRITE
+test;;value23;;WRITE
+name;;rahul;;WRITE
+name;;rahul2;;WRITE

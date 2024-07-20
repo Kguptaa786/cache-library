@@ -1,8 +1,4 @@
-spring:
-  profiles: follower2
 server:
   port: 8082
 
-leaderConnection:
-  host: "localhost"
-  port: 9090
+logFilePath: "logs/commitLog.txt"

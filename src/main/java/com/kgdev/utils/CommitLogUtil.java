@@ -11,8 +11,8 @@ public class CommitLogUtil {
 
     public static CommitLog parseLogEntry(String str){
         String[] parts = str.split(DELIMITER);
-        CacheKey key = new CacheKey(parts[0]);
-        CacheValue value = new GenericCacheValue(parts[1]);
+        CacheKey key = CacheKey.from(parts[0]);
+        CacheValue value = new StringCacheValue(parts[1]);
         MethodEnum method = MethodEnum.valueOf(parts[2].trim());
 
         return CommitLog.builder()
